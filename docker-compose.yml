@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  wiz-controller:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_PATH=/app/data/wiz.db
+    volumes:
+      - ./data:/app/data
+    network_mode: host
+    restart: unless-stopped
+    # Note: network_mode: host is required for LAN discovery to work properly
+    # This gives the container access to the host's network interfaces
