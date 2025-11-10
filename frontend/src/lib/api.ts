@@ -33,6 +33,9 @@ export const devicesApi = {
   setState: (id: string, state: Partial<WizDevice['state']>) =>
     api.post(`/devices/${id}/state`, state).then((r) => r.data),
   
+  setScene: (id: string, sceneId: number, speed?: number) =>
+    api.post(`/devices/${id}/scene`, { sceneId, speed }).then((r) => r.data),
+  
   setMetadata: (id: string, metadata: { name?: string; room?: string; tags?: string[] }) =>
     api.patch(`/devices/${id}/metadata`, metadata).then((r) => r.data),
 };
@@ -59,6 +62,25 @@ export const schedulesApi = {
     api.post(`/schedules/${id}/enable`, { enabled }).then((r) => r.data),
   
   trigger: (id: string) => api.post(`/schedules/${id}/trigger`).then((r) => r.data),
+};
+
+// Group management API
+export const groupsApi = {
+  getAll: () => api.get('/groups').then((r) => r.data.data),
+  getOne: (id: string) => api.get(`/groups/${id}`).then((r) => r.data.data),
+  create: (group: { name: string; description?: string; color?: string; icon?: string }) =>
+    api.post('/groups', group).then((r) => r.data.data),
+  update: (id: string, updates: { name?: string; description?: string; color?: string; icon?: string }) =>
+    api.patch(`/groups/${id}`, updates).then((r) => r.data.data),
+  delete: (id: string) => api.delete(`/groups/${id}`).then((r) => r.data),
+  addDevices: (id: string, deviceIds: string[]) =>
+    api.post(`/groups/${id}/devices`, { deviceIds }).then((r) => r.data.data),
+  removeDevice: (id: string, deviceId: string) =>
+    api.delete(`/groups/${id}/devices/${deviceId}`).then((r) => r.data),
+  setPower: (id: string, power: boolean) =>
+    api.post(`/groups/${id}/power`, { power }).then((r) => r.data.data),
+  setState: (id: string, state: { brightness?: number; colorTemp?: number; rgb?: { r: number; g: number; b: number } }) =>
+    api.post(`/groups/${id}/state`, state).then((r) => r.data.data),
 };
 
 export default api;

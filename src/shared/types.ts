@@ -14,6 +14,7 @@ export interface WizDevice {
   lastSeen: number;
   state?: DeviceState;
   rssi?: number;
+  groups?: string[]; // Array of group IDs this device belongs to
 }
 
 export interface DeviceState {
@@ -64,6 +65,27 @@ export interface Scene {
     deviceId: string;
     state: Partial<DeviceState>;
   }>;
+}
+
+export interface DeviceGroup {
+  id: string;
+  name: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  deviceCount: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface DeviceGroupDetail extends DeviceGroup {
+  devices: string[]; // Array of device IDs in this group
+}
+
+export interface GroupControlResult {
+  total: number;
+  successes: number;
+  failures: number;
 }
 
 export interface ApiResponse<T = unknown> {

@@ -135,6 +135,32 @@ export class WizClient {
         params: {},
       });
 
+      // Log the system config response for debugging
+      if (response.result) {
+        console.log(`[${ip}] System Config:`, JSON.stringify(response, null, 2));
+      }
+
+      return response.result ? response : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /**
+   * Get device model configuration (capabilities/features)
+   */
+  async getModelConfig(ip: string): Promise<WizResponse | null> {
+    try {
+      const response = await this.sendCommand(ip, {
+        method: 'getModelConfig',
+        params: {},
+      });
+
+      // Log the model config response to see device capabilities
+      if (response.result) {
+        console.log(`[${ip}] Model Config (Capabilities):`, JSON.stringify(response, null, 2));
+      }
+
       return response.result ? response : null;
     } catch (error) {
       return null;
@@ -288,6 +314,27 @@ export class WizClient {
       return response.result !== undefined && !response.error;
     } catch (error) {
       console.error(`Failed to set state for ${ip}:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Set device scene with optional speed (0-200, default 100)
+   */
+  async setScene(ip: string, sceneId: number, speed: number = 100): Promise<boolean> {
+    try {
+      const response = await this.sendCommand(ip, {
+        method: 'setPilot',
+        params: {
+          sceneId,
+          speed: Math.max(0, Math.min(200, speed)),
+          state: true,
+        },
+      });
+
+      return response.result !== undefined && !response.error;
+    } catch (error) {
+      console.error(`Failed to set scene for ${ip}:`, error);
       return false;
     }
   }

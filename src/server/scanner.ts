@@ -216,6 +216,13 @@ export class NetworkScanner {
         sysConfig = null;
       }
 
+      // Get model config to see device capabilities/features
+      try {
+        await this.wizClient.getModelConfig(ip);
+      } catch (error) {
+        // Model config is optional, continue without it
+      }
+
       // Determine MAC address
       let mac = arpEntry?.mac;
       if (!mac && response.result.mac) {

@@ -181,6 +181,31 @@ app.post('/api/devices/:id/state', async (req, res) => {
 });
 
 /**
+ * Set device scene
+ */
+app.post('/api/devices/:id/scene', async (req, res) => {
+  const device = scanner.getDevice(req.params.id);
+  if (!device) {
+    return res.status(404).json({ success: false, error: 'Device not found' });
+  }
+
+  const { sceneId, speed } = req.body;
+  const success = await wizClient.setScene(device.ip, sceneId, speed);
+  if (!success) {
+    return res.status(500).json({ success: false, error: 'Failed to set scene' });
+  }
+
+  // Refresh state
+  const state = await wizClient.getState(device.ip);
+  if (state) {
+    scanner.updateDevice(device.id, { state });
+    io.emit('device:updated', scanner.getDevice(device.id));
+  }
+
+  res.json({ success: true, data: state });
+});
+
+/**
  * Start a network scan
  */
 app.post('/api/scan', async (req, res) => {

@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { Home, Scan, Calendar, Settings } from 'lucide-react';
+import { Home, Scan, Calendar, Settings, Users } from 'lucide-react';
 import DevicesPage from './pages/DevicesPage';
 import ScanPage from './pages/ScanPage';
 import SchedulerPage from './pages/SchedulerPage';
+import GroupsPage from './pages/GroupsPage';
 import { useWebSocket } from './hooks/useWebSocket';
 
 function App() {
@@ -57,6 +58,9 @@ function App() {
               <NavLink to="/scan" icon={<Scan size={18} />}>
                 Scan
               </NavLink>
+              <NavLink to="/groups" icon={<Users size={18} />}>
+                Groups
+              </NavLink>
               <NavLink to="/scheduler" icon={<Calendar size={18} />}>
                 Scheduler
               </NavLink>
@@ -69,6 +73,7 @@ function App() {
           <Routes>
             <Route path="/" element={<DevicesPage />} />
             <Route path="/scan" element={<ScanPage />} />
+            <Route path="/groups" element={<GroupsPage />} />
             <Route path="/scheduler" element={<SchedulerPage />} />
           </Routes>
         </main>
