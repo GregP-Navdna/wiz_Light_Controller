@@ -13,29 +13,58 @@ A complete, production-ready full-stack TypeScript application for discovering, 
 
 ## Features
 
+### Device Management
 - 🔍 **Network Discovery**: Multi-heuristic scanning (ARP table, port probe, MAC OUI lookup)
 - 💡 **Device Control**: Power on/off, brightness, color temperature, and RGB control
+- 💾 **Device Persistence**: All discovered devices saved to database across restarts
+- 📊 **Confidence Scoring**: Multi-level device identification confidence
+- 🔧 **Capability Detection**: Automatic detection of device features (RGB, color temp, scenes)
+
+### Advanced Control
+- 🎨 **Scene Control**: 32 built-in WIZ scenes (Ocean, Party, Sunset, Halloween, etc.)
+- ⚡ **Scene Speed**: Adjustable speed for dynamic scenes (0-200)
+- 🌈 **RGB Control**: Individual Red, Green, Blue sliders (0-255) with live preview
+- 🎛️ **Control Modes**: Switch between Manual, Scenes, and RGB control modes
+
+### Group Management
+- 👥 **Device Groups**: Create groups to control multiple devices simultaneously
+- 🎯 **Multi-Device Control**: Power, brightness, and color changes for entire groups
+- 🏷️ **Custom Groups**: Name, color, and icon customization for groups
+- 🔗 **Flexible Associations**: Devices can belong to multiple groups
+
+### Automation
 - ⏰ **Smart Scheduling**: Cron-based automation with persistent storage
+- 📅 **Flexible Timing**: Schedule individual devices or entire groups
 - 🔄 **Real-time Updates**: WebSocket-based live device state synchronization
-- 🌙 **Dark Mode UI**: Modern, responsive React interface with Tailwind CSS
+
+### User Interface
+- 🌙 **Retro Cyberpunk UI**: Neon colors, glowing effects, and 80s-inspired design
+- 📱 **Responsive Design**: Works on desktop, tablet, and mobile
+- ⚡ **Real-time Updates**: Live state changes via WebSocket
+- 🎨 **Modern Stack**: React 18 with TailwindCSS and Lucide icons
+
+### Deployment
 - 🐳 **Docker Support**: Containerized deployment with docker-compose
 - 🧪 **Tested**: Unit and integration tests included
-- 📊 **Confidence Scoring**: Multi-level device identification confidence
+- 🔒 **Secure**: Environment-based configuration
 
 ## Architecture
 
 ### Backend (Node + TypeScript + Express)
-- **Scanner**: Network enumeration with configurable concurrency
-- **WIZ Client**: UDP-based protocol implementation (port 38899)
-- **Scheduler**: Cron-based automation with SQLite persistence
-- **WebSocket Server**: Real-time bi-directional communication
-- **RESTful API**: Complete CRUD operations for devices and schedules
+- **Scanner**: Network enumeration with configurable concurrency and device persistence
+- **WIZ Client**: UDP-based protocol implementation (port 38899) with scene and RGB control
+- **Database**: SQLite with device persistence, groups, and many-to-many relationships
+- **Scheduler**: Cron-based automation with persistent storage
+- **WebSocket Server**: Real-time bi-directional communication with group updates
+- **RESTful API**: Complete CRUD operations for devices, groups, schedules, and scenes
 
 ### Frontend (React + TypeScript + Vite)
-- **Device Management**: Live device grid with controls
+- **Device Management**: Live device grid with power, brightness, color temp, RGB, and scene controls
+- **Group Management**: Create and control device groups with custom colors and icons
 - **Network Scanner**: Interactive scan interface with progress tracking
 - **Scheduler**: Visual cron-based automation manager
-- **WebSocket Integration**: Real-time device state updates
+- **Control Modes**: Tabbed interface for Manual, Scenes, and RGB control
+- **WebSocket Integration**: Real-time device and group state updates
 
 ## Tech Stack
 
@@ -97,12 +126,31 @@ Open your browser to `http://localhost:5173`
 ### 4. Control Devices
 
 On the **Devices** page:
-- Toggle power with the main button
-- Adjust brightness slider
-- Change color temperature
+- **Power Control**: Toggle devices on/off with the main button
+- **Manual Mode**: 
+  - Adjust brightness slider (10-100%)
+  - Change color temperature (2200-6500K)
+- **Scene Mode**: 
+  - Select from 32 built-in scenes (Ocean, Party, Sunset, Halloween, etc.)
+  - Adjust scene speed (20-200) for dynamic scenes
+- **RGB Mode**:
+  - Individual Red, Green, Blue sliders (0-255)
+  - Live color preview with glow effect
 - Devices update in real-time via WebSocket
 
-### 5. Create Schedules
+### 5. Create Device Groups
+
+On the **Groups** page:
+- Click **New Group** to create a group
+- Name your group and choose a color/icon
+- Add devices to the group
+- Control all devices in the group simultaneously:
+  - Power on/off for entire group
+  - Adjust brightness for all devices
+  - Apply scenes to all devices
+- Devices can belong to multiple groups
+
+### 6. Create Schedules
 
 On the **Scheduler** page:
 - Click **Create Schedule**
@@ -184,13 +232,22 @@ POST /api/devices/:id/power
 Content-Type: application/json
 { "power": true }
 
-# Set state (brightness, color temp, etc.)
+# Set state (brightness, color temp, RGB)
 POST /api/devices/:id/state
 Content-Type: application/json
 {
   "brightness": 80,
   "colorTemp": 4000,
+  "rgb": { "r": 255, "g": 128, "b": 0 },
   "power": true
+}
+
+# Set scene with speed
+POST /api/devices/:id/scene
+Content-Type: application/json
+{
+  "sceneId": 4,    # Scene ID (1-32)
+  "speed": 100     # Speed 0-200 (optional, default 100)
 }
 
 # Set device metadata
@@ -256,6 +313,63 @@ Content-Type: application/json
 POST /api/schedules/:id/trigger
 ```
 
+### Groups
+
+```bash
+# Get all groups
+GET /api/groups
+
+# Get single group with devices
+GET /api/groups/:id
+
+# Create group
+POST /api/groups
+Content-Type: application/json
+{
+  "name": "Living Room",
+  "description": "Main living area lights",
+  "color": "#00FFFF",
+  "icon": "Home"
+}
+
+# Update group
+PATCH /api/groups/:id
+Content-Type: application/json
+{
+  "name": "Updated Name",
+  "color": "#FF00FF"
+}
+
+# Delete group
+DELETE /api/groups/:id
+
+# Add devices to group
+POST /api/groups/:id/devices
+Content-Type: application/json
+{
+  "deviceIds": ["device-1", "device-2"]
+}
+
+# Remove device from group
+DELETE /api/groups/:id/devices/:deviceId
+
+# Control group power
+POST /api/groups/:id/power
+Content-Type: application/json
+{
+  "power": true
+}
+
+# Control group state
+POST /api/groups/:id/state
+Content-Type: application/json
+{
+  "brightness": 80,
+  "colorTemp": 4000,
+  "rgb": { "r": 255, "g": 0, "b": 128 }
+}
+```
+
 ### WebSocket Events
 
 Connect to `ws://localhost:3000` (Socket.IO):
@@ -265,9 +379,13 @@ Connect to `ws://localhost:3000` (Socket.IO):
 
 **Server → Client:**
 - `devices:initial` - Initial device list on connection
+- `devices:updated` - Bulk device state update
 - `device:discovered` - New device found during scan
 - `device:updated` - Device state changed
 - `device:removed` - Device removed (stale)
+- `group:created` - New group created
+- `group:updated` - Group modified or devices changed
+- `group:deleted` - Group removed
 - `scan:progress` - Scan progress update
 - `scan:complete` - Scan finished
 - `schedule:triggered` - Schedule executed
@@ -377,6 +495,61 @@ Example response:
   }
 }
 ```
+
+## Database Schema
+
+The application uses SQLite with the following tables:
+
+### devices
+Stores discovered WIZ devices with persistence across restarts.
+- `id` (PRIMARY KEY) - Device identifier (MAC or IP-based)
+- `ip` - Current IP address
+- `mac` - MAC address
+- `name` - User-assigned name
+- `model` - Device model
+- `confidence` - Detection confidence (high/medium/low)
+- `rssi` - Signal strength
+- `state` (JSON) - Current device state (power, brightness, color, etc.)
+- `last_seen` - Last contact timestamp
+- `created_at` - Discovery timestamp
+- `updated_at` - Last update timestamp
+
+### device_metadata
+User-defined metadata for devices.
+- `device_id` (PRIMARY KEY) - References devices.id
+- `name` - Display name
+- `room` - Room location
+- `icon` - Icon identifier
+- `tags` (JSON) - Custom tags array
+
+### groups
+Device groups for multi-device control.
+- `id` (PRIMARY KEY) - Group identifier
+- `name` - Group name
+- `description` - Group description
+- `color` - Hex color code for UI
+- `icon` - Icon identifier
+- `created_at` - Creation timestamp
+- `updated_at` - Last update timestamp
+
+### device_groups
+Many-to-many relationship between devices and groups.
+- `device_id` - References devices.id
+- `group_id` - References groups.id
+- `added_at` - Association timestamp
+- PRIMARY KEY (device_id, group_id)
+
+### schedules
+Cron-based automation rules.
+- `id` (PRIMARY KEY) - Schedule identifier
+- `name` - Schedule name
+- `device_ids` (JSON) - Target device IDs
+- `action` (JSON) - Action to perform
+- `cron` - Cron expression
+- `enabled` - Active status
+- `timezone` - Timezone identifier
+- `created_at` - Creation timestamp
+- `updated_at` - Last update timestamp
 
 ## Security Best Practices
 
