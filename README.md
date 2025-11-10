@@ -1,4 +1,5 @@
 # WIZ LAN Controller
+<img width="1558" height="1072" alt="Screenshot 2025-11-10 122825" src="https://github.com/user-attachments/assets/6cd672a7-ffc4-4e2d-91c9-0a9d291ff0cb" />
 
 A complete, production-ready full-stack TypeScript application for discovering, controlling, and automating WIZ Connected smart bulbs on your local network.
 
@@ -12,6 +13,7 @@ A complete, production-ready full-stack TypeScript application for discovering, 
 **Use responsibly and only on your own network.**
 
 ## Features
+<img width="924" height="993" alt="Screenshot 2025-11-10 122753" src="https://github.com/user-attachments/assets/98bdbf24-f6fe-4338-a495-4dc33fb8cb3e" />
 
 ### Device Management
 - 🔍 **Network Discovery**: Multi-heuristic scanning (ARP table, port probe, MAC OUI lookup)
@@ -19,6 +21,7 @@ A complete, production-ready full-stack TypeScript application for discovering, 
 - 💾 **Device Persistence**: All discovered devices saved to database across restarts
 - 📊 **Confidence Scoring**: Multi-level device identification confidence
 - 🔧 **Capability Detection**: Automatic detection of device features (RGB, color temp, scenes)
+<img width="506" height="642" alt="Screenshot 2025-11-10 122717" src="https://github.com/user-attachments/assets/be2e15f0-f31d-496d-8ca8-e74a5e584c56" />
 
 ### Advanced Control
 - 🎨 **Scene Control**: 32 built-in WIZ scenes (Ocean, Party, Sunset, Halloween, etc.)
@@ -31,11 +34,13 @@ A complete, production-ready full-stack TypeScript application for discovering, 
 - 🎯 **Multi-Device Control**: Power, brightness, and color changes for entire groups
 - 🏷️ **Custom Groups**: Name, color, and icon customization for groups
 - 🔗 **Flexible Associations**: Devices can belong to multiple groups
+<img width="1070" height="435" alt="Screenshot 2025-11-10 122738" src="https://github.com/user-attachments/assets/b7d75ccd-341f-431b-8594-369b54509868" />
 
 ### Automation
 - ⏰ **Smart Scheduling**: Cron-based automation with persistent storage
 - 📅 **Flexible Timing**: Schedule individual devices or entire groups
 - 🔄 **Real-time Updates**: WebSocket-based live device state synchronization
+<img width="521" height="428" alt="Screenshot 2025-11-10 122655" src="https://github.com/user-attachments/assets/7aca4bf0-b765-48ce-bbf0-522f9b235d1d" />
 
 ### User Interface
 - 🌙 **Retro Cyberpunk UI**: Neon colors, glowing effects, and 80s-inspired design
@@ -606,7 +611,6 @@ wiz-lan-controller/
 ## Acknowledgments
 
 - **WIZ Connected**: For creating great smart bulbs with local control
-- **Open Source Community**: For the excellent libraries powering this project
 
 ## License
 
